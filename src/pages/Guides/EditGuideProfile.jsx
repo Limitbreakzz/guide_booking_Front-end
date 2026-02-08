@@ -2,38 +2,45 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import BackButton from "../components/BackButton";
+import BackButton from "../../components/BackButton";
 
 const EditGuideProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [picture, setPicture] = useState("");
   const [form, setForm] = useState({
     name: "",
     email: "",
     tel: "",
     language: "",
     experience: "",
-    images: "",
+    picture: null,
     status: true,
   });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchGuide = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/guides/${id}`);
+        const res = await axios.get(
+          `http://localhost:4000/guides/${id}`
+        );
+
         setForm({
           name: res.data.data.name || "",
           email: res.data.data.email || "",
           tel: res.data.data.tel || "",
           language: res.data.data.language || "",
           experience: res.data.data.experience || "",
-          images: res.data.data.images || "",
+          picture: null,
           status: Boolean(res.data.data.status),
         });
+
+        setPicture(res.data.data.picture || "");
       } catch {
         alert("โหลดข้อมูลไม่สำเร็จ");
       } finally {
@@ -60,12 +67,46 @@ const EditGuideProfile = () => {
           แก้ไขโปรไฟล์ไกด์
         </h1>
 
+        <div className="flex justify-center mb-6">
+          <img
+            src={
+              picture
+                ? `http://localhost:4000/images/${picture}`
+                : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+            }
+            alt={form.name}
+            className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+          />
+        </div>
+
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             try {
               setSaving(true);
-              await axios.put(`http://localhost:4000/guides/${id}`, form);
+
+              const formData = new FormData();
+              formData.append("name", form.name);
+              formData.append("email", form.email);
+              formData.append("tel", form.tel);
+              formData.append("language", form.language);
+              formData.append("experience", form.experience);
+              formData.append("status", form.status);
+
+              if (form.picture) {
+                formData.append("picture", form.picture);
+              }
+
+              await axios.put(
+                `http://localhost:4000/guides/${id}`,
+                formData,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
               alert("บันทึกข้อมูลเรียบร้อย");
               navigate(`/guides/${id}`);
             } catch {
@@ -78,51 +119,67 @@ const EditGuideProfile = () => {
         >
           <input
             value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, name: e.target.value })
+            }
             placeholder="ชื่อ"
             className="w-full border rounded px-3 py-2"
           />
 
           <input
             value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
             placeholder="อีเมล"
             className="w-full border rounded px-3 py-2"
           />
 
           <input
             value={form.tel}
-            onChange={(e) => setForm({ ...form, tel: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, tel: e.target.value })
+            }
             placeholder="เบอร์โทร"
             className="w-full border rounded px-3 py-2"
           />
 
           <input
             value={form.language}
-            onChange={(e) => setForm({ ...form, language: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, language: e.target.value })
+            }
             placeholder="ภาษา"
             className="w-full border rounded px-3 py-2"
           />
 
           <textarea
             value={form.experience}
-            onChange={(e) => setForm({ ...form, experience: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, experience: e.target.value })
+            }
             placeholder="ประสบการณ์"
             className="w-full border rounded px-3 py-2"
           />
 
           <input
-            type="text"
-            value={form.images}
-            onChange={(e) => setForm({ ...form, images: e.target.value })}
-            placeholder="วางลิงก์รูป (.jpg, .png, .webp)"
+            type="file"
+            onChange={(e) =>
+              setForm({
+                ...form,
+                picture: e.target.files[0],
+              })
+            }
             className="w-full border rounded px-3 py-2"
           />
 
           <select
             value={form.status}
             onChange={(e) =>
-              setForm({ ...form, status: e.target.value === "true" })
+              setForm({
+                ...form,
+                status: e.target.value === "true",
+              })
             }
             className="w-full border rounded px-3 py-2"
           >
@@ -139,7 +196,10 @@ const EditGuideProfile = () => {
         </form>
 
         <div className="mt-auto pt-8">
-          <BackButton className="py-3 w-full" label="กลับหน้าก่อนหน้า" />
+          <BackButton
+            className="py-3 w-full"
+            label="กลับหน้าก่อนหน้า"
+          />
         </div>
       </motion.div>
     </div>

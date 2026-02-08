@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import BackButton from "../components/BackButton";
+import BackButton from "../../components/BackButton";
 
 const Booking = () => {
   const { tripId } = useParams();
@@ -11,8 +11,7 @@ const Booking = () => {
   const [datetime, setDatetime] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // test
-  const touristId = localStorage.getItem("touristId");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios
@@ -29,25 +28,33 @@ const Booking = () => {
       return;
     }
 
-    if (!touristId) {
+    if (!token) {
       alert("กรุณาเข้าสู่ระบบก่อนจอง");
+      navigate("/login");
       return;
     }
 
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:4000/bookings", {
-        tripId,
-        touristId,
-        datetime,
-      });
+      await axios.post(
+        "http://localhost:4000/bookings",
+        {
+          tripId: Number(tripId),
+          datetime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       alert("จองทริปสำเร็จ");
       navigate("/profile");
     } catch (error) {
-      console.error(error);
-      alert("เกิดข้อผิดพลาดในการจอง");
+      console.error(error.response);
+      alert(error.response?.data?.message || "เกิดข้อผิดพลาดในการจอง");
     } finally {
       setLoading(false);
     }
@@ -85,6 +92,7 @@ const Booking = () => {
           >
             {loading ? "กำลังจอง..." : "ยืนยันการจอง"}
           </button>
+
           <div className="mt-6 flex">
             <BackButton label="ย้อนกลับ" />
           </div>

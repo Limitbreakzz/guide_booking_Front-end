@@ -71,15 +71,11 @@ export default function Trips() {
       <section className="bg-[#F5F5F5] py-12">
         <div className="max-w-6xl mx-auto px-6">
           {loading && (
-            <div className="text-center text-gray-500">
-              กำลังโหลดข้อมูล...
-            </div>
+            <div className="text-center text-gray-500">กำลังโหลดข้อมูล...</div>
           )}
 
           {!loading && trips.length === 0 && (
-            <div className="text-center text-gray-500">
-              ไม่พบทริปที่ค้นหา
-            </div>
+            <div className="text-center text-gray-500">ไม่พบทริปที่ค้นหา</div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -92,12 +88,15 @@ export default function Trips() {
                 viewport={{ once: true }}
                 className="bg-white border rounded-lg p-5 hover:shadow-md transition"
               >
-                <div className="h-40 bg-gray-200 overflow-hidden">
-                  {trip.images ? (
+                <div className="h-40 bg-gray-200 overflow-hidden rounded-lg">
+                  {trip.picture ? (
                     <img
-                      src={trip.images}
+                      src={`http://localhost:4000/images/${trip.picture}`}
                       alt={trip.name}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/600x400";
+                      }}
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full text-gray-500 text-sm">

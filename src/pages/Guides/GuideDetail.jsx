@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import BackButton from "../components/BackButton";
+import BackButton from "../../components/BackButton";
 
 const GuideProfile = () => {
   const { id } = useParams();
@@ -11,6 +11,11 @@ const GuideProfile = () => {
   const [guide, setGuide] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const role = localStorage.getItem("role");
+  const userId = localStorage.getItem("userId");
+
+  const isOwner = role === "GUIDE" && String(userId) === String(id);
 
   useEffect(() => {
     fetchProfile();
@@ -56,13 +61,14 @@ const GuideProfile = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white w-full max-w-xl rounded-2xl shadow-md p-8 flex flex-col">
-
+        className="bg-white w-full max-w-xl rounded-2xl shadow-md p-8 flex flex-col"
+      >
         <div className="flex justify-center mb-6">
           <img
             src={
-              guide.images ||
-              "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+              guide.picture
+                ? `http://localhost:4000/images/${guide.picture}`
+                : "https://cdn-icons-png.flaticon.com/512/847/847969.png"
             }
             alt={guide.name}
             className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
@@ -116,6 +122,7 @@ const GuideProfile = () => {
           </div>
         </div>
 
+        {/* งานที่รับอยู่ */}
         <div className="mt-10">
           <h2 className="text-lg font-semibold text-gray-800 mb-3">
             งานที่รับอยู่
@@ -140,19 +147,24 @@ const GuideProfile = () => {
                       นักท่องเที่ยว: {job.tourist?.name}
                     </p>
                     <p className="text-sm text-gray-500">
-                      วันที่:{" "}
-                      {new Date(job.datetime).toLocaleDateString()}
+                      วันที่: {new Date(job.datetime).toLocaleDateString()}
                     </p>
                   </div>
 
                   <span
                     className={`px-3 py-1 text-sm rounded-full ${
-                      job.status === "pending" ? "bg-yellow-100 text-yellow-700": 
-                      job.status === "confirmed" ? "bg-green-100 text-green-700": 
-                      "bg-blue-100 text-blue-700"
+                      job.status === "pending"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : job.status === "confirmed"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700"
                     }`}
                   >
-                    {job.status === "pending" ? "รอการยืนยัน" : job.status === "confirmed" ? "ยืนยันแล้ว" : "กำลังดำเนินงาน"}
+                    {job.status === "pending"
+                      ? "รอการยืนยัน"
+                      : job.status === "confirmed"
+                      ? "ยืนยันแล้ว"
+                      : "กำลังดำเนินงาน"}
                   </span>
                 </div>
               ))}
@@ -160,14 +172,17 @@ const GuideProfile = () => {
           )}
         </div>
 
-        <div className="space-y-2 mt-8">
-          <button
-            onClick={() => navigate(`/guides/${id}/edit`)}
-            className="w-full py-3 rounded-lg bg-black text-white hover:bg-gray-800 transition"
-          >
-            แก้ไขโปรไฟล์
-          </button>
-        </div>
+        {/* ปุ่มแก้ไข (เฉพาะเจ้าของโปรไฟล์) */}
+        {isOwner && (
+          <div className="space-y-2 mt-8">
+            <button
+              onClick={() => navigate(`/guides/${id}/edit`)}
+              className="w-full py-3 rounded-lg bg-black text-white hover:bg-gray-800 transition"
+            >
+              แก้ไขโปรไฟล์
+            </button>
+          </div>
+        )}
 
         <div className="mt-auto pt-8">
           <BackButton label="กลับหน้าก่อนหน้า" />

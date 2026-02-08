@@ -13,7 +13,7 @@ const Home = () => {
             "url('https://image.makewebeasy.net/makeweb/crop/wvcCMuduF/home/zone1_BG_2x.webp?v=202405291424&x=0&y=0&w=3840&h=1386')",
         }}
       >
-        <div className="absolute inset-0 bg-opacity-40"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
 
         <motion.div
           className="relative z-10 p-8 text-center text-white"

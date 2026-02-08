@@ -1,42 +1,81 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import './index.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "./index.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import About from "./pages/About";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
-import Trips from "./pages/Trips";
-import Guides from "./pages/Guides";
-import GuideDetail from "./pages/GuideDetail";
-import TripDetail from "./pages/TripDetail";
-import Booking from "./pages/Booking";
-import TouristProfile from "./pages/TouristProfile";
-import EditGuideProfile from "./pages/EditGuideProfile";
+import Trips from "./pages/Trips/Trips";
+import Guides from "./pages/Guides/Guides";
+import GuideDetail from "./pages/Guides/GuideDetail";
+import TripDetail from "./pages/Trips/TripDetail";
+import Booking from "./pages/Trips/Booking";
+import TouristProfile from "./pages/Tourist/TouristProfile";
+import EditGuideProfile from "./pages/Guides/EditGuideProfile";
+import CreateTrip from "./pages/Guides/CreateTrip";
+import EditTrip from "./pages/Trips/EditTrip";
+import MyTrips from "./pages/Guides/MyTrips";
+import EditTouristProfile from "./pages/Tourist/EditTouristProfile";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminTrips from "./pages/Admin/AdminTrips";
+import AdminGuides from "./pages/Admin/AdminGuides";
+import AdminEditTrip from "./pages/Admin/AdminEditTrip";
+import AdminTourists from "./pages/Admin/AdminTourists";
+import TouristBookings from "./pages/Tourist/TouristBookings";
+import GuideBookings from "./pages/Guides/GuideBookings";
 
 
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <div className="min-h-screen">
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/trips" element={<Trips />} /> 
-          <Route path="/about" element={<About/>} />
-          <Route path="/contact" element={<Contact/>} />
-          <Route path="/guides" element={<Guides />} />
-          <Route path="/guides/:id" element={<GuideDetail />} />
-          <Route path="/trips/:id" element={<TripDetail />} />
-          <Route path="/booking/:tripId" element={<Booking />} />
-          <Route path="/touristprofile" element={<TouristProfile />} />
-          <Route path="/guides/:id/edit" element={<EditGuideProfile />} />
-        </Routes>
-      </div>
-      <Footer />
-    </Router>
-  )
-}
+      <Routes>
 
-export default App
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/*"
+          element={
+            <>
+              <Navbar />
+              <div className="min-h-screen">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/trips" element={<Trips />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/guides" element={<Guides />} />
+                  <Route path="/guides/:id" element={<GuideDetail />} />
+                  <Route path="/trips/:id" element={<TripDetail />} />
+                  <Route path="/booking/:tripId" element={<Booking />} />
+                  <Route path="/tourist/:id" element={<TouristProfile />} />
+                  <Route path="/guides/:id/edit" element={<EditGuideProfile />} />
+                  <Route path="/create-trip" element={<CreateTrip />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/trips/:id/edit" element={<EditTrip />} />
+                  <Route path="/my-trips" element={<MyTrips />} />
+                  <Route path="/tourist/:id/edit" element={<EditTouristProfile />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/trips" element={<AdminTrips />} />
+                  <Route path="/admin/guides" element={<AdminGuides />} />
+                  <Route path="/admin/trips/:id/edit" element={<AdminEditTrip />} />
+                  <Route path="/admin/tourists" element={<AdminTourists />} />
+                  <Route path="/tourist-bookings" element={<TouristBookings />} />
+                  <Route path="/guide-bookings" element={<GuideBookings />} />
+                </Routes>
+              </div>
+              <Footer />
+            </>
+          }
+        />
+
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;

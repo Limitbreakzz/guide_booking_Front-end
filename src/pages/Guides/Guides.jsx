@@ -43,9 +43,7 @@ const Guides = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
             ไกด์ท่องเที่ยว
           </h1>
-          <p className="text-base md:text-lg text-gray-600 mb-6">
-            เลือกไกด์มืออาชีพ พร้อมพาคุณออกเดินทาง
-          </p>
+
           <div className="mb-6 flex gap-2">
             <input
               type="text"
@@ -67,11 +65,15 @@ const Guides = () => {
       <section className="bg-[#F5F5F5] py-12">
         <div className="max-w-6xl mx-auto px-6">
           {loading && (
-            <div className="text-center text-gray-500">กำลังโหลดข้อมูล...</div>
+            <div className="text-center text-gray-500">
+              กำลังโหลดข้อมูล...
+            </div>
           )}
 
           {!loading && guides.length === 0 && (
-            <div className="text-center text-gray-500">ไม่พบไกด์ที่ค้นหา</div>
+            <div className="text-center text-gray-500">
+              ไม่พบไกด์ที่ค้นหา
+            </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -86,9 +88,16 @@ const Guides = () => {
               >
                 <div className="flex justify-center mb-4">
                   <img
-                    src={guide.images}
+                    src={
+                      guide.picture
+                        ? `http://localhost:4000/images/${guide.picture}`
+                        : "https://via.placeholder.com/150"
+                    }
                     alt={guide.name}
                     className="w-28 h-28 rounded-full object-cover border"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/150";
+                    }}
                   />
                 </div>
 
@@ -104,7 +113,9 @@ const Guides = () => {
                   ประสบการณ์: {guide.experience || "ไม่ระบุ"}
                 </p>
 
-                <p className="text-sm text-gray-500">โทร: {guide.tel || "-"}</p>
+                <p className="text-sm text-gray-500">
+                  โทร: {guide.tel || "-"}
+                </p>
 
                 <div className="flex items-center justify-between mt-4">
                   <span
@@ -114,7 +125,9 @@ const Guides = () => {
                         : "bg-red-100 text-red-700"
                     }`}
                   >
-                    {guide.status ? "พร้อมให้บริการ" : "ไม่พร้อมให้บริการ"}
+                    {guide.status
+                      ? "พร้อมให้บริการ"
+                      : "ไม่พร้อมให้บริการ"}
                   </span>
                 </div>
 
