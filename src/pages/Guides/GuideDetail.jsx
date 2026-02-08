@@ -4,7 +4,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import BackButton from "../../components/BackButton";
 
-const GuideProfile = () => {
+const GuideDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -14,6 +14,7 @@ const GuideProfile = () => {
 
   const role = localStorage.getItem("role");
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
   const isOwner = role === "GUIDE" && String(userId) === String(id);
 
@@ -25,13 +26,26 @@ const GuideProfile = () => {
     try {
       if (!id) return;
 
+      // ดึงข้อมูลไกด์
       const guideRes = await axios.get(
         `http://localhost:4000/guides/${id}`
       );
       setGuide(guideRes.data.data);
 
+      // ถ้าไม่มี token ไม่ต้องยิง bookings
+      if (!token) {
+        console.log("No token found");
+        return;
+      }
+
+      // ดึง booking พร้อมแนบ token
       const bookingRes = await axios.get(
-        `http://localhost:4000/bookings?guideId=${id}`
+        `http://localhost:4000/bookings?guideId=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const activeJobs = bookingRes.data.data.filter((b) =>
@@ -172,7 +186,6 @@ const GuideProfile = () => {
           )}
         </div>
 
-        {/* ปุ่มแก้ไข (เฉพาะเจ้าของโปรไฟล์) */}
         {isOwner && (
           <div className="space-y-2 mt-8">
             <button
@@ -192,4 +205,4 @@ const GuideProfile = () => {
   );
 };
 
-export default GuideProfile;
+export default GuideDetail;
