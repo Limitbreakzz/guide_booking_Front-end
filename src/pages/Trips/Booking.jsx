@@ -51,7 +51,7 @@ const Booking = () => {
       );
 
       alert("จองทริปสำเร็จ");
-      navigate("/profile");
+      navigate("/my-bookings");
     } catch (error) {
       console.error(error.response);
       alert(error.response?.data?.message || "เกิดข้อผิดพลาดในการจอง");
