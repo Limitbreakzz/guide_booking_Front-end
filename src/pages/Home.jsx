@@ -1,7 +1,7 @@
 import React from 'react'
-import Description from '../components/Description';
 import Highlights from '../components/Highlights';
 import { motion } from 'framer-motion';
+import TopProvinces from '../components/TopTrips';
 
 const Home = () => {
   return (
@@ -47,7 +47,7 @@ const Home = () => {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <Description />
+        <TopProvinces />
       </motion.div>
 
       <motion.div
