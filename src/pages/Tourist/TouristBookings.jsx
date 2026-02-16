@@ -15,7 +15,7 @@ const TouristBookings = () => {
   const fetchBookings = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:4000/bookings/",
+        "http://localhost:4000/bookings/my-bookings",
         {
           headers: {
             Authorization: `Bearer ${token}`,
